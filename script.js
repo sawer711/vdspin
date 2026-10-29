@@ -16,115 +16,53 @@ renderSoundBtn();
 
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
-let masterBus = null;     // общий выход: сухой звук + лёгкая "комната"
-let noiseBuf = null;      // короткий шум для тонкого щелчка
-let lastTickAt = 0;
-
-// Цепочка: всё идёт через мягкий фильтр высоких частот и чуть-чуть реверберации — звук не "режет" ухо
-function buildAudioChain() {
-    masterBus = audioCtx.createGain();
-    masterBus.gain.value = 1.5;
-
-    const softener = audioCtx.createBiquadFilter();
-    softener.type = 'lowpass';
-    softener.frequency.value = 5200;
-    softener.Q.value = 0.5;
-    masterBus.connect(softener);
-    softener.connect(audioCtx.destination);
-
-    // небольшая комната (искусственный затухающий отзвук)
-    const len = Math.floor(audioCtx.sampleRate * 0.9);
-    const ir = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
-    for (let ch = 0; ch < 2; ch++) {
-        const d = ir.getChannelData(ch);
-        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2);
-    }
-    const room = audioCtx.createConvolver();
-    room.buffer = ir;
-    const wet = audioCtx.createGain();
-    wet.gain.value = 0.22;
-    masterBus.connect(room);
-    room.connect(wet);
-    wet.connect(softener);
-
-    const nLen = Math.floor(audioCtx.sampleRate * 0.02);
-    noiseBuf = audioCtx.createBuffer(1, nLen, audioCtx.sampleRate);
-    const nd = noiseBuf.getChannelData(0);
-    for (let i = 0; i < nLen; i++) nd[i] = Math.random() * 2 - 1;
-}
 
 function initAudio() {
-    if (!audioCtx) {
-        audioCtx = new AudioCtx();
-        buildAudioChain();
-    }
+    if (!audioCtx) audioCtx = new AudioCtx();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
-// Мягкий "тук" при прохождении сектора: глухой тон + тонкий щелчок.
-// intensity 0..1 — чем быстрее вращение, тем тише; when — момент запуска (нужен только для проверки)
-function playTickSound(intensity = 1, when) {
+// Щелчок при прохождении каждого сектора
+function playTickSound() {
     if (!audioCtx || !soundOn) return;
-    if (when === undefined) {
-        // на высокой скорости не сыпем десятки щелчков в секунду — иначе получается "трещотка"
-        const nowMs = performance.now();
-        if (nowMs - lastTickAt < 40) return;
-        lastTickAt = nowMs;
-    }
     try {
-        const t = (when !== undefined) ? when : audioCtx.currentTime;
-        const v = Math.max(0.15, Math.min(1, intensity));
-        const f = 210 * (1 + (Math.random() - 0.5) * 0.08);
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-        const body = audioCtx.createOscillator();
-        const bodyGain = audioCtx.createGain();
-        body.type = 'sine';
-        body.frequency.setValueAtTime(f * 1.5, t);
-        body.frequency.exponentialRampToValueAtTime(f, t + 0.025);
-        bodyGain.gain.setValueAtTime(0.0001, t);
-        bodyGain.gain.linearRampToValueAtTime(0.16 * v, t + 0.003);
-        bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
-        body.connect(bodyGain);
-        bodyGain.connect(masterBus);
-        body.start(t);
-        body.stop(t + 0.12);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(650, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.035);
 
-        const click = audioCtx.createBufferSource();
-        const clickBand = audioCtx.createBiquadFilter();
-        const clickGain = audioCtx.createGain();
-        click.buffer = noiseBuf;
-        clickBand.type = 'bandpass';
-        clickBand.frequency.value = 2400;
-        clickBand.Q.value = 1.4;
-        clickGain.gain.setValueAtTime(0.05 * v, t);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.018);
-        click.connect(clickBand);
-        clickBand.connect(clickGain);
-        clickGain.connect(masterBus);
-        click.start(t);
+        gain.gain.setValueAtTime(0.28, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
     } catch (e) {}
 }
 
-// Звук остановки: мягкий колокольчик (аккорд из трёх нот с тихим отзвуком)
-function playWinSound(when) {
+// Звук остановки
+function playWinSound() {
     if (!audioCtx || !soundOn) return;
     try {
-        const t0 = (when !== undefined) ? when : audioCtx.currentTime;
         [523.25, 659.25, 783.99].forEach((freq, idx) => {
-            const t = t0 + idx * 0.09;
-            [[1, 0.10], [2.01, 0.025]].forEach(([mult, level]) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq * mult, t);
-                gain.gain.setValueAtTime(0.0001, t);
-                gain.gain.linearRampToValueAtTime(level, t + 0.012);
-                gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.3);
-                osc.connect(gain);
-                gain.connect(masterBus);
-                osc.start(t);
-                osc.stop(t + 1.35);
-            });
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.08);
+
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + idx * 0.08 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.4);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(audioCtx.currentTime + idx * 0.08);
+            osc.stop(audioCtx.currentTime + idx * 0.08 + 0.45);
         });
     } catch (e) {}
 }
@@ -487,7 +425,7 @@ spinBtn.addEventListener('click', () => {
         // Проверка сектора для щелчка
         const currentSliceIndex = Math.floor(currentAngle / sliceAngle);
         if (currentSliceIndex !== lastSliceIndex) {
-            playTickSound(0.35 + 0.65 * progress);
+            playTickSound();
             lastSliceIndex = currentSliceIndex;
         }
 
@@ -792,7 +730,7 @@ killerBtn.addEventListener('click', () => {
     // короткое мелькание перед итоговым результатом
     const flickerTimer = setInterval(() => {
         showKiller(KILLERS[Math.floor(Math.random() * KILLERS.length)]);
-        playTickSound(0.7);
+        playTickSound();
     }, 90);
 
     setTimeout(() => {

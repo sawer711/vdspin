@@ -155,7 +155,7 @@ header::after {
 .slot-hex::before {
     content: '';
     position: absolute;
-    inset: 6px 5px;
+    inset: 4px;
     clip-path: var(--hex);
     background:
         var(--grain-soft),
@@ -188,12 +188,12 @@ header::after {
 .slot img {
     position: absolute;
     z-index: 1;
-    left: 9px;
-    top: 10px;
-    width: calc(100% - 18px);
-    height: calc(100% - 20px);
-    object-fit: contain;
-    clip-path: var(--hex);
+    left: 50%;
+    top: 4px;
+    width: 112px;
+    height: 112px;
+    transform: translateX(-50%);
+    object-fit: cover;
     display: none;
 }
 
@@ -690,8 +690,8 @@ canvas {
 /* Шестиугольная иконка перка в окне */
 .reward-img {
     position: relative;
-    width: 120px;
-    height: 138px;
+    width: 104px;
+    height: 120px;
     margin: 0 auto 14px;
     clip-path: var(--hex);
     background: linear-gradient(150deg, var(--rust-hi), #6a2410 50%, var(--rust-mid));
@@ -702,26 +702,15 @@ canvas {
     transform: scale(1.1);
 }
 
-/* тёмная подложка внутри рамки */
-.reward-img::before {
-    content: '';
-    position: absolute;
-    inset: 7px 6px;
-    clip-path: var(--hex);
-    background:
-        var(--grain-soft),
-        radial-gradient(circle at 50% 30%, #1f100b 0%, #0b0504 80%);
-}
-
 .reward-img img {
     position: absolute;
-    z-index: 1;
-    left: 7px;
-    top: 8px;
-    width: calc(100% - 14px);
-    height: calc(100% - 16px);
-    object-fit: contain;
-    clip-path: var(--hex);
+    left: 50%;
+    top: 4px;
+    width: 112px;
+    height: 112px;
+    transform: translateX(-50%);
+    object-fit: cover;
+    background-color: #0f0705;
 }
 
 .reward-title {
@@ -879,6 +868,7 @@ canvas {
     .slots-container { gap: 6px; }
     .slot { width: 100px; }
     .slot-hex { width: 92px; height: 106px; }
+    .slot img { width: 98px; height: 98px; }
     .slot-name { font-size: 0.7rem; }
 }
 
