@@ -350,7 +350,11 @@ drawWheel();
 // Подсказка с названием перка при наведении на колесо
 const wheelTip = document.getElementById('wheelTip');
 
-canvas.addEventListener('mousemove', (e) => {
+let lastTouch = 0;
+let touchTipTimer = null;
+
+// общий обработчик для мыши и пальца: e — любой объект с clientX / clientY
+function wheelPointer(e) {
     if (isSpinning || activePool.length === 0) { wheelTip.classList.remove('show'); setHover(null); return; }
     const rect = canvas.getBoundingClientRect();
     const dx = e.clientX - rect.left - rect.width / 2;
@@ -369,8 +373,23 @@ canvas.addEventListener('mousemove', (e) => {
     wheelTip.style.left = (e.clientX - canvas.parentElement.getBoundingClientRect().left) + 'px';
     wheelTip.style.top = (e.clientY - canvas.parentElement.getBoundingClientRect().top) + 'px';
     wheelTip.classList.add('show');
+    // на телефоне нет "ухода курсора": прячем подсказку сами через пару секунд после касания
+    if (Date.now() - lastTouch < 800) {
+        clearTimeout(touchTipTimer);
+        touchTipTimer = setTimeout(() => { wheelTip.classList.remove('show'); setHover(null); }, 1800);
+    }
+}
+canvas.addEventListener('mousemove', wheelPointer);
+canvas.addEventListener('touchstart', (e) => {
+    lastTouch = Date.now();
+    if (e.touches && e.touches[0]) wheelPointer(e.touches[0]);
+}, { passive: true });
+canvas.addEventListener('mouseleave', () => {
+    // после касания телефон сам "уводит мышь": не прячем подсказку раньше времени
+    if (Date.now() - lastTouch < 1000) return;
+    wheelTip.classList.remove('show');
+    setHover(null);
 });
-canvas.addEventListener('mouseleave', () => { wheelTip.classList.remove('show'); setHover(null); });
 
 spinBtn.addEventListener('click', () => {
     initAudio();
