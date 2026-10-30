@@ -419,6 +419,16 @@ canvas {
         0 5px 12px rgba(0, 0, 0, 0.65);
 }
 
+/* Подсказка под колесом */
+.wheel-hint {
+    margin-top: 14px;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-align: center;
+    opacity: 0.8;
+}
+
 /* --- РАНДОМАЙЗЕР МАНЬЯКОВ (СПРАВА) --- */
 .killer-anchor {
     position: absolute;
@@ -845,6 +855,8 @@ canvas {
     .controls .action-btn { padding: 11px 16px; font-size: 0.95rem; letter-spacing: 2px; }
     #spinBtn { flex: 1 1 100%; }
     #cardBtn { flex: 1 1 0; }
+
+    .wheel-hint { order: 2; margin-top: 12px; padding: 0 16px; }
 
     .killer-anchor {
         order: 3;
