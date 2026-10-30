@@ -4,7 +4,7 @@ try { soundOn = localStorage.getItem('vdspin_sound') !== 'off'; } catch (e) {}
 
 const soundBtn = document.getElementById('soundBtn');
 function renderSoundBtn() {
-    soundBtn.innerText = soundOn ? '🔊 ЗВУК' : '🔇 ЗВУК';
+    soundBtn.innerText = (soundOn ? '🔊 ' : '🔇 ') + t('sound');
     soundBtn.classList.toggle('off', !soundOn);
 }
 soundBtn.addEventListener('click', () => {
@@ -701,7 +701,7 @@ async function drawBuildCard() {
 
         c.fillStyle = '#8a7366';
         c.font = "italic 13px 'Rubik', sans-serif";
-        const q = perk && perk.quote ? perk.quote.replace(/<[^>]+>/g, '') : '';
+        const q = perk ? perkText(perk).quote.replace(/<[^>]+>/g, '') : '';
         wrapText(c, q, x + cw / 2, top + 302, cw - 40, 18, 5);
     });
 
@@ -733,7 +733,7 @@ async function drawBuildCard() {
         c.fillText('?', kx + kw / 2, top + 220);
         c.fillStyle = '#8a7366';
         c.font = "500 16px 'Rubik', sans-serif";
-        c.fillText('маньяк не выбран', kx + kw / 2, top + 270);
+        c.fillText(t('killerNone'), kx + kw / 2, top + 270);
     }
 }
 
@@ -765,12 +765,11 @@ cardBtn.addEventListener('click', async () => {
 
 document.getElementById('cardClose').addEventListener('click', () => cardModal.classList.remove('active'));
 
-const EXPORT_ERR = 'Браузер блокирует экспорт, если страница открыта как файл (file://). Открой сайт через локальный сервер или хостинг — либо сделай скриншот карточки.';
 
 document.getElementById('cardDownload').addEventListener('click', () => {
     try {
         cardCanvas.toBlob(blob => {
-            if (!blob) { cardNote.innerText = EXPORT_ERR; return; }
+            if (!blob) { cardNote.innerText = t('exportErr'); return; }
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'vdspin-build.png';
@@ -778,26 +777,26 @@ document.getElementById('cardDownload').addEventListener('click', () => {
             setTimeout(() => URL.revokeObjectURL(a.href), 1000);
         }, 'image/png');
     } catch (e) {
-        cardNote.innerText = EXPORT_ERR;
+        cardNote.innerText = t('exportErr');
     }
 });
 
 document.getElementById('cardCopy').addEventListener('click', () => {
     try {
         cardCanvas.toBlob(async blob => {
-            if (!blob) { cardNote.innerText = EXPORT_ERR; return; }
+            if (!blob) { cardNote.innerText = t('exportErr'); return; }
             try {
                 await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
                 cardNote.style.color = '#7dff9a';
-                cardNote.innerText = 'Скопировано в буфер обмена';
+                cardNote.innerText = t('copied');
             } catch (e) {
                 cardNote.style.color = '#ff8b95';
-                cardNote.innerText = 'Не удалось скопировать — нажми «Скачать PNG».';
+                cardNote.innerText = t('copyFail');
             }
         }, 'image/png');
     } catch (e) {
         cardNote.style.color = '#ff8b95';
-        cardNote.innerText = EXPORT_ERR;
+        cardNote.innerText = t('exportErr');
     }
 });
 
@@ -848,10 +847,10 @@ function updateControlsUI() {
     killerBtn.disabled = (filledCount < 3) || killerRolling;
     cardBtn.disabled = filledCount < 3;
     if (filledCount === 3) {
-        spinBtn.innerText = "БИЛД СОБРАН";
+        spinBtn.innerText = t('spinDone');
         spinBtn.disabled = true;
     } else {
-        spinBtn.innerText = `КРУТИТЬ (${filledCount + 1}/3)`;
+        spinBtn.innerText = t('spin', filledCount + 1);
         spinBtn.disabled = false;
     }
 }
@@ -862,11 +861,15 @@ window.showSlotPerk = function(index) {
     }
 };
 
+let shownPerk = null, shownPreview = false;
 function showModal(perk, preview = false) {
-    closeModal.innerText = preview ? 'ЗАКРЫТЬ' : 'ПРОДОЛЖИТЬ';
+    shownPerk = perk;
+    shownPreview = preview;
+    const txt = perkText(perk);
+    closeModal.innerText = preview ? t('close') : t('cont');
     modalTitle.innerText = perk.name;
-    modalDesc.innerHTML = perk.desc;
-    modalQuote.innerHTML = perk.quote || '';
+    modalDesc.innerHTML = txt.desc;
+    modalQuote.innerHTML = txt.quote;
     modalImg.style.opacity = '1';
     modalImg.src = perk.image;
     modal.classList.add('active');
@@ -967,3 +970,14 @@ resetBtn.addEventListener('click', () => {
         }
     });
 })();
+
+// --- СМЕНА ЯЗЫКА: обновляем всё, что рисуется скриптом ---
+document.addEventListener('langchange', () => {
+    renderSoundBtn();
+    updateControlsUI();
+    if (shownPerk && modal.classList.contains('active')) showModal(shownPerk, shownPreview);
+    if (cardModal.classList.contains('active')) { cardNote.innerText = ''; drawBuildCard(); }
+});
+// первая отрисовка с учётом сохранённого / определённого языка
+renderSoundBtn();
+updateControlsUI();
