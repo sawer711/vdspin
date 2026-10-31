@@ -1062,3 +1062,64 @@ function flashScreen() {
     void f.offsetWidth;   // перезапуск анимации
     f.classList.add('go');
 }
+
+// --- ССЫЛКА НА БИЛД: ?b=id,id,id&k=номер_маньяка ---
+function buildShareUrl() {
+    const ids = buildSlots.map(p => p ? p.id : '').join(',');
+    const k = currentKiller ? KILLERS.indexOf(currentKiller) : -1;
+    return `${location.origin === 'null' ? '' : location.origin}${location.pathname}?b=${ids}&k=${k}`;
+}
+
+document.getElementById('cardLink').addEventListener('click', async () => {
+    const url = buildShareUrl();
+    try {
+        await navigator.clipboard.writeText(url);
+        cardNote.style.color = '';
+        cardNote.innerText = t('linkCopied');
+    } catch (e) {
+        // запасной вариант для старых браузеров / file://
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand('copy');
+            ta.remove();
+            if (!ok) throw new Error('copy');
+            cardNote.innerText = t('linkCopied');
+        } catch (e2) {
+            history.replaceState(null, '', url.slice(url.indexOf(location.pathname)));
+            cardNote.innerText = t('linkManual');
+        }
+    }
+});
+
+// открытие по ссылке: восстанавливаем билд и сразу показываем карточку
+(function loadSharedBuild() {
+    const q = new URLSearchParams(location.search);
+    if (!q.has('b')) return;
+    const ids = q.get('b').split(',').map(Number);
+    const kIdx = Number(q.get('k'));
+    const perks = ids.map(id => MASTER_PERKS.find(p => p.id === id));
+    const unique = new Set(ids).size === 3;
+    if (ids.length !== 3 || !unique || perks.some(p => !p) || !KILLERS[kIdx]) return;   // кривая ссылка — открываем обычный сайт
+
+    buildSlots = perks;
+    activePool = MASTER_PERKS.filter(p => !ids.includes(p.id));
+    currentKiller = KILLERS[kIdx];
+    showKiller(currentKiller);
+    killerCard.classList.add('filled');
+    updateSlotsUI();
+    updateControlsUI();
+    drawWheel();
+    cardNote.innerText = '';
+    cardModal.classList.add('active');
+    drawBuildCard();
+})();
+
+// при сбросе убираем параметры из адреса, чтобы обновление страницы не возвращало чужой билд
+resetBtn.addEventListener('click', () => {
+    if (location.search) history.replaceState(null, '', location.pathname);
+});
