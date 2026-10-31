@@ -12,6 +12,7 @@ const LANGS = [
 
 const I18N = {
     ru: {
+        accept: 'ПРИНЯТЬ', reject: 'НЕТ ТАКОГО ПЕРКА', confirm: 'ПОДТВЕРДИТЬ БИЛД',
         sound: 'ЗВУК', soundTitle: 'Включить/выключить звук', langTitle: 'Язык',
         buildTitle: 'ВАШ БИЛД (3 СЛОТА)', killerTitle: 'МАНЬЯК', killerBtn: 'ВЫБРАТЬ МАНЬЯКА',
         spin: (n) => `КРУТИТЬ (${n}/3)`, spinDone: 'БИЛД СОБРАН',
@@ -23,6 +24,7 @@ const I18N = {
         exportErr: 'Браузер блокирует экспорт, если страница открыта как файл (file://). Открой сайт через локальный сервер или хостинг — либо сделай скриншот карточки.'
     },
     en: {
+        accept: 'ACCEPT', reject: "I DON'T HAVE THIS PERK", confirm: 'CONFIRM BUILD',
         sound: 'SOUND', soundTitle: 'Turn sound on/off', langTitle: 'Language',
         buildTitle: 'YOUR BUILD (3 SLOTS)', killerTitle: 'KILLER', killerBtn: 'PICK A KILLER',
         spin: (n) => `SPIN (${n}/3)`, spinDone: 'BUILD COMPLETE',
@@ -34,6 +36,7 @@ const I18N = {
         exportErr: 'The browser blocks export when the page is opened as a file (file://). Open the site through a local server or hosting, or take a screenshot of the card.'
     },
     es: {
+        accept: 'ACEPTAR', reject: 'NO TENGO ESTE BENEFICIO', confirm: 'CONFIRMAR BUILD',
         sound: 'SONIDO', soundTitle: 'Activar/desactivar el sonido', langTitle: 'Idioma',
         buildTitle: 'TU BUILD (3 RANURAS)', killerTitle: 'ASESINO', killerBtn: 'ELEGIR ASESINO',
         spin: (n) => `GIRAR (${n}/3)`, spinDone: 'BUILD COMPLETA',
@@ -45,6 +48,7 @@ const I18N = {
         exportErr: 'El navegador bloquea la exportación si la página se abre como archivo (file://). Abre el sitio desde un servidor local o un hosting, o haz una captura de la tarjeta.'
     },
     fr: {
+        accept: 'ACCEPTER', reject: 'JE N\'AI PAS CET ATOUT', confirm: 'CONFIRMER LE BUILD',
         sound: 'SON', soundTitle: 'Activer/désactiver le son', langTitle: 'Langue',
         buildTitle: 'VOTRE BUILD (3 EMPLACEMENTS)', killerTitle: 'TUEUR', killerBtn: 'CHOISIR UN TUEUR',
         spin: (n) => `TOURNER (${n}/3)`, spinDone: 'BUILD TERMINÉ',
@@ -56,6 +60,7 @@ const I18N = {
         exportErr: 'Le navigateur bloque l\'export si la page est ouverte comme un fichier (file://). Ouvre le site via un serveur local ou un hébergeur, ou fais une capture d\'écran de la carte.'
     },
     kk: {
+        accept: 'ҚАБЫЛДАУ', reject: 'МЕНДЕ ОЛ ПЕРК ЖОҚ', confirm: 'БИЛДТІ РАСТАУ',
         sound: 'ДЫБЫС', soundTitle: 'Дыбысты қосу/өшіру', langTitle: 'Тіл',
         buildTitle: 'СІЗДІҢ БИЛД (3 ұя)', killerTitle: 'МАНЬЯК', killerBtn: 'МАНЬЯКТЫ ТАҢДАУ',
         spin: (n) => `АЙНАЛДЫРУ (${n}/3)`, spinDone: 'БИЛД ЖИНАЛДЫ',

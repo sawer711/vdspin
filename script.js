@@ -464,7 +464,7 @@ canvas.addEventListener('click', (e) => {
     const idx = sectorAtPoint(e.clientX, e.clientY);
     if (idx < 0) return;
     wheelTip.classList.remove('show');
-    showModal(activePool[idx], true);
+    showModal(activePool[idx], 'preview');
 });
 
 canvas.addEventListener('mousemove', wheelPointer);
@@ -483,7 +483,12 @@ spinBtn.addEventListener('click', () => {
     initAudio();
 
     const emptyIndex = buildSlots.findIndex(slot => slot === null);
-    if (emptyIndex === -1 || isSpinning || activePool.length === 0) return;
+    if (emptyIndex === -1) {
+        // все 3 перка приняты — кнопка работает как "подтвердить билд" и запускает крутку маньяка
+        if (!currentKiller && !killerRolling) rollKiller();
+        return;
+    }
+    if (isSpinning || pendingPerk || activePool.length === 0) return;
 
     isSpinning = true;
     resetHover();
@@ -524,12 +529,9 @@ spinBtn.addEventListener('click', () => {
             playWinSound();
 
             const wonPerk = activePool[targetIndex];
-            buildSlots[emptyIndex] = wonPerk;
-            activePool.splice(targetIndex, 1);
-            
-            updateSlotsUI();
+            pendingPerk = { perk: wonPerk, emptyIndex };   // в билд попадёт только после "Принять"
             flashScreen();
-            showModal(wonPerk);
+            showModal(wonPerk, 'pending');
             updateControlsUI();
             drawWheel();
         }
@@ -557,7 +559,7 @@ function updateSlotsUI() {
 
 // --- РАНДОМАЙЗЕР МАНЬЯКОВ (простой рандом, без колеса) ---
 
-const killerBtn = document.getElementById('killerBtn');
+const killerModal = document.getElementById('killerModal');
 const killerCard = document.getElementById('killerCard');
 const killerImg = document.getElementById('killerImg');
 const killerName = document.getElementById('killerName');
@@ -807,52 +809,88 @@ function showKiller(k) {
     killerName.innerText = k.name;
 }
 
-killerBtn.addEventListener('click', () => {
-    if (killerRolling) return;
+// выбираем маньяка, отличного от предыдущего (два раза подряд один и тот же не выпадет)
+function pickKillerNot(prev) {
+    if (KILLERS.length < 2) return KILLERS[0];
+    let k;
+    do { k = KILLERS[Math.floor(Math.random() * KILLERS.length)]; } while (k === prev);
+    return k;
+}
+
+// финальная крутка: большая карточка по центру, долгое замедление, потом сразу карточка билда
+function rollKiller() {
+    if (killerRolling || currentKiller) return;
     initAudio();
     killerRolling = true;
-    killerBtn.disabled = true;
-    killerCard.classList.remove('filled');
+    updateControlsUI();
+    KILLERS.forEach(k => { const im = new Image(); im.src = k.image; });   // заранее грузим картинки, чтобы не мигали
+
+    killerCard.classList.remove('filled', 'slowing');
     killerCard.classList.add('rolling');
+    killerModal.classList.add('active');
 
-    // короткое мелькание перед итоговым результатом
-    const flickerTimer = setInterval(() => {
-        showKiller(KILLERS[Math.floor(Math.random() * KILLERS.length)]);
-        playTickSound(0.7);
-    }, 90);
+    const TOTAL = 5200;
+    const start = performance.now();
+    let last = null, nextAt = 0;
 
-    setTimeout(() => {
-        clearInterval(flickerTimer);
-        const result = KILLERS[Math.floor(Math.random() * KILLERS.length)];
-        currentKiller = result;
-        showKiller(result);
-        killerCard.classList.remove('rolling');
-        killerCard.classList.add('filled');
-        playWinSound();
-        killerRolling = false;
-        updateControlsUI();
-    }, 900);
-});
+    function frame(now) {
+        const el = now - start;
+        const p = Math.min(el / TOTAL, 1);
+        if (p > 0.72) killerCard.classList.add('slowing');   // в конце тряска стихает
+
+        if (el >= TOTAL) {
+            const result = pickKillerNot(last);
+            currentKiller = result;
+            showKiller(result);
+            killerCard.classList.remove('rolling', 'slowing');
+            killerCard.classList.add('filled');
+            playWinSound();
+            flashScreen();
+            killerRolling = false;
+            updateControlsUI();
+            // даём секунду рассмотреть маньяка и показываем итоговую карточку
+            setTimeout(async () => {
+                killerModal.classList.remove('active');
+                cardNote.innerText = '';
+                cardModal.classList.add('active');
+                await drawBuildCard();
+            }, 1500);
+            return;
+        }
+        if (now >= nextAt) {
+            last = pickKillerNot(last);
+            showKiller(last);
+            playTickSound(Math.min(1, 0.4 + p));
+            // чем дальше, тем реже смена: от 60 мс до ~500 мс
+            nextAt = now + 60 + Math.pow(p, 2.4) * 440;
+        }
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
 
 function resetKiller() {
     killerRolling = false;
     currentKiller = null;
-    killerCard.classList.remove('filled', 'rolling');
+    killerModal.classList.remove('active');
+    killerCard.classList.remove('filled', 'rolling', 'slowing');
     killerImg.src = '';
     killerName.innerText = '';
 }
 
 function updateControlsUI() {
     const filledCount = buildSlots.filter(s => s !== null).length;
-    // кнопка маньяка доступна только когда выбиты все 3 перка
-    killerBtn.disabled = (filledCount < 3) || killerRolling;
-    cardBtn.disabled = filledCount < 3;
-    if (filledCount === 3) {
+    cardBtn.disabled = !currentKiller;
+    if (filledCount < 3) {
+        spinBtn.innerText = t('spin', filledCount + 1);
+        spinBtn.disabled = isSpinning || !!pendingPerk;
+    } else if (!currentKiller) {
+        // три перка приняты: подтверждаем билд и запускаем финальную крутку маньяка
+        spinBtn.innerText = t('confirm');
+        spinBtn.disabled = killerRolling;
+    } else {
         spinBtn.innerText = t('spinDone');
         spinBtn.disabled = true;
-    } else {
-        spinBtn.innerText = t('spin', filledCount + 1);
-        spinBtn.disabled = false;
     }
 }
 
@@ -862,12 +900,20 @@ window.showSlotPerk = function(index) {
     }
 };
 
-let shownPerk = null, shownPreview = false;
-function showModal(perk, preview = false) {
+let shownPerk = null, shownMode = 'view';
+const rejectBtn = document.getElementById('rejectBtn');
+// mode: 'preview' (клик по колесу), 'view' (клик по слоту), 'pending' (выпал перк: принять или отклонить)
+function showModal(perk, mode = 'view') {
+    if (mode === true) mode = 'preview';
     shownPerk = perk;
-    shownPreview = preview;
+    shownMode = mode;
+    const pending = mode === 'pending';
     const txt = perkText(perk);
-    closeModal.innerText = preview ? t('close') : t('cont');
+    closeModal.innerText = pending ? t('accept') : t('close');
+    // отклонить можно, только если в колесе останется хватает перков на пустые слоты
+    const empty = buildSlots.filter(x => x === null).length;
+    rejectBtn.style.display = (pending && activePool.length - 1 >= empty) ? '' : 'none';
+    modal.classList.toggle('locked', pending);
     modalTitle.innerText = perk.name;
     modalDesc.innerHTML = txt.desc;
     modalQuote.innerHTML = txt.quote;
@@ -876,10 +922,29 @@ function showModal(perk, preview = false) {
     modal.classList.add('active');
 }
 
-closeModal.addEventListener('click', () => modal.classList.remove('active'));
+// выпавший перк ждёт решения: принять в билд или убрать с колеса ("нет такого перка")
+let pendingPerk = null;
+function resolvePending(accept) {
+    if (!pendingPerk) return;
+    const { perk, emptyIndex } = pendingPerk;
+    const i = activePool.findIndex(p => p.id === perk.id);
+    if (i >= 0) activePool.splice(i, 1);      // в любом случае перк больше не выпадет
+    if (accept) buildSlots[emptyIndex] = perk;
+    pendingPerk = null;
+    modal.classList.remove('active', 'locked');
+    updateSlotsUI();
+    updateControlsUI();
+    drawWheel();
+}
+rejectBtn.addEventListener('click', () => resolvePending(false));
+
+closeModal.addEventListener('click', () => {
+    if (pendingPerk) resolvePending(true);
+    else modal.classList.remove('active');
+});
 
 resetBtn.addEventListener('click', () => {
-    if (isSpinning) return;
+    if (isSpinning || killerRolling || pendingPerk) return;
     buildSlots = [null, null, null];
     activePool = [...MASTER_PERKS];
     resetKiller();
@@ -962,12 +1027,12 @@ resetBtn.addEventListener('click', () => {
         m.addEventListener('mousedown', e => { downOnBackdrop = (e.target === m); });
         m.addEventListener('click', e => {
             // закрываем, только если и нажали, и отпустили на фоне (чтобы не закрыть окно при выделении текста)
-            if (e.target === m && downOnBackdrop) m.classList.remove('active');
+            if (e.target === m && downOnBackdrop && !m.classList.contains('locked')) m.classList.remove('active');
         });
     });
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.modal.active:not(.locked)').forEach(m => m.classList.remove('active'));
         }
     });
 })();
@@ -976,7 +1041,7 @@ resetBtn.addEventListener('click', () => {
 document.addEventListener('langchange', () => {
     renderSoundBtn();
     updateControlsUI();
-    if (shownPerk && modal.classList.contains('active')) showModal(shownPerk, shownPreview);
+    if (shownPerk && modal.classList.contains('active')) showModal(shownPerk, shownMode);
     if (cardModal.classList.contains('active')) { cardNote.innerText = ''; drawBuildCard(); }
 });
 // первая отрисовка с учётом сохранённого / определённого языка
