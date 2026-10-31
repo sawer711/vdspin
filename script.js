@@ -528,6 +528,7 @@ spinBtn.addEventListener('click', () => {
             activePool.splice(targetIndex, 1);
             
             updateSlotsUI();
+            flashScreen();
             showModal(wonPerk);
             updateControlsUI();
             drawWheel();
@@ -981,3 +982,18 @@ document.addEventListener('langchange', () => {
 // первая отрисовка с учётом сохранённого / определённого языка
 renderSoundBtn();
 updateControlsUI();
+
+// --- БЕЛАЯ ВСПЫШКА при выпадении перка (гаснет за ~0.3 с) ---
+function flashScreen() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let f = document.getElementById('flashFx');
+    if (!f) {
+        f = document.createElement('div');
+        f.id = 'flashFx';
+        f.className = 'flash-fx';
+        document.body.appendChild(f);
+    }
+    f.classList.remove('go');
+    void f.offsetWidth;   // перезапуск анимации
+    f.classList.add('go');
+}

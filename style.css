@@ -1121,3 +1121,18 @@ a:focus-visible {
         animation-duration: 0.01ms !important;
     }
 }
+
+/* --- БЕЛАЯ ВСПЫШКА ПРИ ВЫПАДЕНИИ ПЕРКА --- */
+.flash-fx {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+}
+.flash-fx.go { animation: flashFade 0.3s ease-out forwards; }
+@keyframes flashFade {
+    0%   { opacity: 0.85; }
+    100% { opacity: 0; }
+}
