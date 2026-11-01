@@ -207,7 +207,9 @@ MASTER_PERKS.forEach(p => {
     perkImagesCache[p.id] = img;
 });
 
-let activePool = [...MASTER_PERKS];
+let wheelPerks = [...MASTER_PERKS];   // перки, которые игрок оставил на колесе
+let wheelConfigured = false;           // пока колесо не настроено, оно пустое
+let activePool = [];
 let buildSlots = [null, null, null];
 
 const canvas = document.getElementById('wheel');
@@ -224,11 +226,65 @@ const closeModal = document.getElementById('closeModal');
 let currentAngle = 0;
 let isSpinning = false;
 
+// пустое колесо: тёмный диск с ржавым ободом и контурами будущих перков
+function drawEmptyWheel() {
+    const cx = canvas.width / 2, cy = canvas.height / 2, R = cx - 12;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    const g = ctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, R);
+    g.addColorStop(0, '#120806');
+    g.addColorStop(0.7, '#22110b');
+    g.addColorStop(1, '#2d170f');
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.clip();
+    drawGrain(ctx, 0.07);
+    ctx.restore();
+    // тонкие линии секторов и пустые шестиугольники
+    for (let i = 0; i < 12; i++) {
+        const a = i * Math.PI / 6;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * R * 0.2, cy + Math.sin(a) * R * 0.2);
+        ctx.lineTo(cx + Math.cos(a) * (R - 12), cy + Math.sin(a) * (R - 12));
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(90,35,18,0.55)';
+        ctx.stroke();
+        const am = a + Math.PI / 12;
+        ctx.save();
+        ctx.translate(cx + Math.cos(am) * R * 0.76, cy + Math.sin(am) * R * 0.76);
+        hexPath(ctx, 24);
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = 'rgba(138,58,28,0.45)';
+        ctx.stroke();
+        ctx.restore();
+    }
+    // обод
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - 5, 0, Math.PI * 2);
+    ctx.lineWidth = 12;
+    ctx.strokeStyle = '#3c180d';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - 11, 0, Math.PI * 2);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(232,112,58,0.55)';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#0d0604';
+    ctx.stroke();
+}
+
 function drawWheel() {
     const totalSlices = activePool.length;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (totalSlices === 0) return;
+    if (totalSlices === 0) { drawEmptyWheel(); return; }
 
     const sliceAngle = (2 * Math.PI) / totalSlices;
     const centerX = canvas.width / 2;
@@ -482,13 +538,16 @@ canvas.addEventListener('mouseleave', () => {
 spinBtn.addEventListener('click', () => {
     initAudio();
 
+    // колесо ещё не настроено: кнопка открывает настройку перков
+    if (!wheelConfigured) { openSetup(); return; }
+
     const emptyIndex = buildSlots.findIndex(slot => slot === null);
     if (emptyIndex === -1) {
         // все 3 перка приняты — кнопка работает как "подтвердить билд" и запускает крутку маньяка
         if (!currentKiller && !killerRolling) rollKiller();
         return;
     }
-    if (isSpinning || pendingPerk || activePool.length === 0) return;
+    if (isSpinning || activePool.length === 0) return;
 
     isSpinning = true;
     resetHover();
@@ -529,9 +588,11 @@ spinBtn.addEventListener('click', () => {
             playWinSound();
 
             const wonPerk = activePool[targetIndex];
-            pendingPerk = { perk: wonPerk, emptyIndex };   // в билд попадёт только после "Принять"
+            buildSlots[emptyIndex] = wonPerk;
+            activePool.splice(targetIndex, 1);
+            updateSlotsUI();
             flashScreen();
-            showModal(wonPerk, 'pending');
+            showModal(wonPerk, 'won');
             updateControlsUI();
             drawWheel();
         }
@@ -880,12 +941,21 @@ function resetKiller() {
 
 function updateControlsUI() {
     const filledCount = buildSlots.filter(s => s !== null).length;
+    const controls = document.getElementById('controls');
+    const hint = document.querySelector('.wheel-hint');
+    controls.classList.toggle('pre-setup', !wheelConfigured);
+    document.getElementById('gearBtn').disabled = isSpinning || killerRolling;
+    hint.dataset.i18n = wheelConfigured ? 'hint' : 'hintSetup';
+    hint.textContent = t(hint.dataset.i18n);
     cardBtn.disabled = !currentKiller;
-    if (filledCount < 3) {
+    if (!wheelConfigured) {
+        spinBtn.innerText = t('setupWheel');
+        spinBtn.disabled = false;
+    } else if (filledCount < 3) {
         spinBtn.innerText = t('spin', filledCount + 1);
-        spinBtn.disabled = isSpinning || !!pendingPerk;
+        spinBtn.disabled = isSpinning;
     } else if (!currentKiller) {
-        // три перка приняты: подтверждаем билд и запускаем финальную крутку маньяка
+        // три перка выбиты: подтверждаем билд и запускаем финальную крутку маньяка
         spinBtn.innerText = t('confirm');
         spinBtn.disabled = killerRolling;
     } else {
@@ -901,19 +971,13 @@ window.showSlotPerk = function(index) {
 };
 
 let shownPerk = null, shownMode = 'view';
-const rejectBtn = document.getElementById('rejectBtn');
-// mode: 'preview' (клик по колесу), 'view' (клик по слоту), 'pending' (выпал перк: принять или отклонить)
+// mode: 'preview' (клик по колесу), 'view' (клик по слоту), 'won' (перк только что выпал)
 function showModal(perk, mode = 'view') {
     if (mode === true) mode = 'preview';
     shownPerk = perk;
     shownMode = mode;
-    const pending = mode === 'pending';
     const txt = perkText(perk);
-    closeModal.innerText = pending ? t('accept') : t('close');
-    // отклонить можно, только если в колесе останется хватает перков на пустые слоты
-    const empty = buildSlots.filter(x => x === null).length;
-    rejectBtn.style.display = (pending && activePool.length - 1 >= empty) ? '' : 'none';
-    modal.classList.toggle('locked', pending);
+    closeModal.innerText = mode === 'won' ? t('cont') : t('close');
     modalTitle.innerText = perk.name;
     modalDesc.innerHTML = txt.desc;
     modalQuote.innerHTML = txt.quote;
@@ -922,31 +986,12 @@ function showModal(perk, mode = 'view') {
     modal.classList.add('active');
 }
 
-// выпавший перк ждёт решения: принять в билд или убрать с колеса ("нет такого перка")
-let pendingPerk = null;
-function resolvePending(accept) {
-    if (!pendingPerk) return;
-    const { perk, emptyIndex } = pendingPerk;
-    const i = activePool.findIndex(p => p.id === perk.id);
-    if (i >= 0) activePool.splice(i, 1);      // в любом случае перк больше не выпадет
-    if (accept) buildSlots[emptyIndex] = perk;
-    pendingPerk = null;
-    modal.classList.remove('active', 'locked');
-    updateSlotsUI();
-    updateControlsUI();
-    drawWheel();
-}
-rejectBtn.addEventListener('click', () => resolvePending(false));
-
-closeModal.addEventListener('click', () => {
-    if (pendingPerk) resolvePending(true);
-    else modal.classList.remove('active');
-});
+closeModal.addEventListener('click', () => modal.classList.remove('active'));
 
 resetBtn.addEventListener('click', () => {
-    if (isSpinning || killerRolling || pendingPerk) return;
+    if (isSpinning || killerRolling) return;
     buildSlots = [null, null, null];
-    activePool = [...MASTER_PERKS];
+    activePool = [...wheelPerks];
     resetKiller();
     updateSlotsUI();
     updateControlsUI();
@@ -1107,6 +1152,8 @@ document.getElementById('cardLink').addEventListener('click', async () => {
     if (ids.length !== 3 || !unique || perks.some(p => !p) || !KILLERS[kIdx]) return;   // кривая ссылка — открываем обычный сайт
 
     buildSlots = perks;
+    wheelPerks = [...MASTER_PERKS];
+    wheelConfigured = true;
     activePool = MASTER_PERKS.filter(p => !ids.includes(p.id));
     currentKiller = KILLERS[kIdx];
     showKiller(currentKiller);
@@ -1123,3 +1170,74 @@ document.getElementById('cardLink').addEventListener('click', async () => {
 resetBtn.addEventListener('click', () => {
     if (location.search) history.replaceState(null, '', location.pathname);
 });
+
+// --- НАСТРОЙКА КОЛЕСА: таблица всех перков, нажатие включает/выключает перк ---
+const setupModal = document.getElementById('setupModal');
+const setupGrid = document.getElementById('setupGrid');
+const setupCount = document.getElementById('setupCount');
+const setupConfirm = document.getElementById('setupConfirm');
+let offIds = new Set();      // выключенные перки (запоминаются в браузере)
+try {
+    const saved = JSON.parse(localStorage.getItem('vdspin_off') || '[]');
+    if (Array.isArray(saved)) offIds = new Set(saved.filter(id => MASTER_PERKS.some(p => p.id === id)));
+} catch (e) {}
+let draftOff = new Set();
+
+function updateSetupCount() {
+    const on = MASTER_PERKS.length - draftOff.size;
+    setupCount.textContent = t('setupCount', on, MASTER_PERKS.length);
+    setupConfirm.disabled = on < 3;
+}
+
+function renderSetup() {
+    setupGrid.innerHTML = '';
+    MASTER_PERKS.forEach(p => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'setup-item' + (draftOff.has(p.id) ? ' off' : '');
+        b.dataset.id = p.id;
+        b.innerHTML = '<span class="setup-hex"><img alt=""></span><span class="setup-name"></span>';
+        b.querySelector('img').src = p.image;
+        b.querySelector('.setup-name').textContent = p.name;
+        b.addEventListener('click', () => {
+            if (draftOff.has(p.id)) draftOff.delete(p.id); else draftOff.add(p.id);
+            b.classList.toggle('off', draftOff.has(p.id));
+            updateSetupCount();
+        });
+        setupGrid.appendChild(b);
+    });
+    updateSetupCount();
+}
+
+function openSetup() {
+    if (isSpinning || killerRolling) return;
+    draftOff = new Set(offIds);
+    renderSetup();
+    setupGrid.scrollTop = 0;
+    setupModal.classList.add('active');
+}
+
+document.getElementById('setupAll').addEventListener('click', () => { draftOff = new Set(); renderSetup(); });
+document.getElementById('setupNone').addEventListener('click', () => { draftOff = new Set(MASTER_PERKS.map(p => p.id)); renderSetup(); });
+document.getElementById('gearBtn').addEventListener('click', openSetup);
+
+setupConfirm.addEventListener('click', () => {
+    if (MASTER_PERKS.length - draftOff.size < 3) return;
+    offIds = new Set(draftOff);
+    try { localStorage.setItem('vdspin_off', JSON.stringify([...offIds])); } catch (e) {}
+    wheelPerks = MASTER_PERKS.filter(p => !offIds.has(p.id));
+    wheelConfigured = true;
+    // новая настройка колеса начинает билд заново
+    buildSlots = [null, null, null];
+    activePool = [...wheelPerks];
+    resetKiller();
+    if (location.search) history.replaceState(null, '', location.pathname);
+    setupModal.classList.remove('active');
+    updateSlotsUI();
+    updateControlsUI();
+    drawWheel();
+});
+
+document.addEventListener('langchange', () => { if (setupModal.classList.contains('active')) updateSetupCount(); });
+updateControlsUI();
+drawWheel();

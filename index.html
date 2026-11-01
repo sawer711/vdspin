@@ -22,7 +22,7 @@
     <meta name="twitter:description" content="Spin the perk wheel, roll a killer and share your Violence District build.">
     <meta name="twitter:image" content="https://sawer711.github.io/vdspin/og-image.jpg?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20261101a">
+    <link rel="stylesheet" href="style.css?v=20261101b">
 </head>
 <body>
 
@@ -90,10 +90,11 @@
             </div>
         </div>
 
-        <div class="controls">
+        <div class="controls pre-setup" id="controls">
             <button class="action-btn" id="spinBtn">КРУТИТЬ (1/3)</button>
             <button class="action-btn card-btn" id="cardBtn" data-i18n="card" disabled>КАРТОЧКА</button>
             <button class="action-btn reset-btn" id="resetBtn" data-i18n-title="resetTitle" title="Сбросить билд">✕</button>
+            <button class="action-btn reset-btn gear-btn" id="gearBtn" type="button" data-i18n-title="setupWheel" title="Настроить колесо">⚙</button>
         </div>
         <p class="wheel-hint" data-i18n="hint">Нажми на перк на колесе, чтобы прочитать описание</p>
     </main>
@@ -107,10 +108,22 @@
             <h2 class="reward-title" id="modalTitle">Perk Name</h2>
             <p class="reward-desc" id="modalDesc"></p>
             <p class="reward-quote" id="modalQuote"></p>
-            <div class="modal-actions">
-                <button class="close-btn" id="closeModal">ПРИНЯТЬ</button>
-                <button class="close-btn reject-btn" id="rejectBtn" data-i18n="reject">НЕТ ТАКОГО ПЕРКА</button>
+            <button class="close-btn" id="closeModal">ПРОДОЛЖИТЬ</button>
+        </div>
+    </div>
+
+    <!-- НАСТРОЙКА КОЛЕСА: какие перки будут выпадать -->
+    <div class="modal" id="setupModal">
+        <div class="modal-card setup-card">
+            <h2 class="reward-title" data-i18n="setupTitle">НАСТРОЙКА КОЛЕСА</h2>
+            <p class="setup-hint" data-i18n="setupHint">Нажми на перк, чтобы убрать его с колеса.</p>
+            <div class="setup-tools">
+                <button class="close-btn mini-btn" type="button" id="setupAll" data-i18n="setupAll">ВКЛЮЧИТЬ ВСЕ</button>
+                <button class="close-btn mini-btn" type="button" id="setupNone" data-i18n="setupNone">ВЫКЛЮЧИТЬ ВСЕ</button>
+                <span class="setup-count" id="setupCount"></span>
             </div>
+            <div class="setup-grid" id="setupGrid"></div>
+            <button class="action-btn setup-confirm" type="button" id="setupConfirm" data-i18n="setupConfirm">ПОДТВЕРДИТЬ</button>
         </div>
     </div>
 
@@ -154,9 +167,9 @@
     </nav>
     <div class="soon-toast" id="soonToast" role="status" aria-live="polite" data-i18n="soon">Скоро</div>
 
-    <script src="perks.js?v=20261101a"></script>
-    <script src="perks_i18n.js?v=20261101a"></script>
-    <script src="lang.js?v=20261101a"></script>
-    <script src="script.js?v=20261101a"></script>
+    <script src="perks.js?v=20261101b"></script>
+    <script src="perks_i18n.js?v=20261101b"></script>
+    <script src="lang.js?v=20261101b"></script>
+    <script src="script.js?v=20261101b"></script>
 </body>
 </html>
