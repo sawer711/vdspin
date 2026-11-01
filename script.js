@@ -590,6 +590,7 @@ spinBtn.addEventListener('click', () => {
             const wonPerk = activePool[targetIndex];
             buildSlots[emptyIndex] = wonPerk;
             activePool.splice(targetIndex, 1);
+            if (window.reportDrop) reportDrop(wonPerk);   // показываем перк в ленте «выпало у игроков»
             updateSlotsUI();
             flashScreen();
             showModal(wonPerk, 'won');

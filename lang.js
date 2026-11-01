@@ -12,6 +12,8 @@ const LANGS = [
 
 const I18N = {
     ru: {
+        feedTitle: "ВЫПАЛО У ИГРОКОВ", feedEmpty: "Пока тихо. Крутите колесо!",
+        agoSec: (n)=>`${n} сек назад`, agoMin: (n)=>`${n} мин назад`, agoHour: (n)=>`${n} ч назад`, agoDay: (n)=>`${n} дн назад`,
         setupWheel: "НАСТРОИТЬ КОЛЕСО", setupTitle: "НАСТРОЙКА КОЛЕСА", setupHint: "Нажми на перк, чтобы убрать его с колеса. Серые перки не выпадут.", setupAll: "ВКЛЮЧИТЬ ВСЕ", setupNone: "ВЫКЛЮЧИТЬ ВСЕ", setupConfirm: "ПОДТВЕРДИТЬ", hintSetup: "Сначала выбери, какие перки будут на колесе",
         setupCount: (n,m)=>`Выбрано ${n} из ${m} (минимум 3)`,
         copyLink: "ССЫЛКА НА БИЛД", linkCopied: "Ссылка на билд скопирована", linkManual: "Скопируй ссылку из адресной строки",
@@ -27,6 +29,8 @@ const I18N = {
         exportErr: 'Браузер блокирует экспорт, если страница открыта как файл (file://). Открой сайт через локальный сервер или хостинг — либо сделай скриншот карточки.'
     },
     en: {
+        feedTitle: "DROPPED FOR PLAYERS", feedEmpty: "Quiet for now. Spin the wheel!",
+        agoSec: (n)=>`${n}s ago`, agoMin: (n)=>`${n}m ago`, agoHour: (n)=>`${n}h ago`, agoDay: (n)=>`${n}d ago`,
         setupWheel: "SET UP THE WHEEL", setupTitle: "WHEEL SETUP", setupHint: "Click a perk to remove it from the wheel. Gray perks will not drop.", setupAll: "ENABLE ALL", setupNone: "DISABLE ALL", setupConfirm: "CONFIRM", hintSetup: "First choose which perks will be on the wheel",
         setupCount: (n,m)=>`Selected ${n} of ${m} (minimum 3)`,
         copyLink: "SHARE LINK", linkCopied: "Build link copied", linkManual: "Copy the link from the address bar",
@@ -42,6 +46,8 @@ const I18N = {
         exportErr: 'The browser blocks export when the page is opened as a file (file://). Open the site through a local server or hosting, or take a screenshot of the card.'
     },
     es: {
+        feedTitle: "LES SALIÓ A LOS JUGADORES", feedEmpty: "Todo tranquilo. ¡Gira la ruleta!",
+        agoSec: (n)=>`hace ${n} s`, agoMin: (n)=>`hace ${n} min`, agoHour: (n)=>`hace ${n} h`, agoDay: (n)=>`hace ${n} d`,
         setupWheel: "CONFIGURAR LA RULETA", setupTitle: "CONFIGURACIÓN DE LA RULETA", setupHint: "Haz clic en un beneficio para quitarlo de la ruleta. Los grises no saldrán.", setupAll: "ACTIVAR TODOS", setupNone: "DESACTIVAR TODOS", setupConfirm: "CONFIRMAR", hintSetup: "Primero elige qué beneficios estarán en la ruleta",
         setupCount: (n,m)=>`Elegidos ${n} de ${m} (mínimo 3)`,
         copyLink: "ENLACE DEL BUILD", linkCopied: "Enlace del build copiado", linkManual: "Copia el enlace de la barra de direcciones",
@@ -57,6 +63,8 @@ const I18N = {
         exportErr: 'El navegador bloquea la exportación si la página se abre como archivo (file://). Abre el sitio desde un servidor local o un hosting, o haz una captura de la tarjeta.'
     },
     fr: {
+        feedTitle: "TIRÉS PAR LES JOUEURS", feedEmpty: 'Calme pour l\'instant. Tourne la roue !',
+        agoSec: (n)=>`il y a ${n} s`, agoMin: (n)=>`il y a ${n} min`, agoHour: (n)=>`il y a ${n} h`, agoDay: (n)=>`il y a ${n} j`,
         setupWheel: "CONFIGURER LA ROUE", setupTitle: "CONFIGURATION DE LA ROUE", setupHint: "Clique sur un atout pour le retirer de la roue. Les atouts grisés ne sortiront pas.", setupAll: "TOUT ACTIVER", setupNone: "TOUT DÉSACTIVER", setupConfirm: "CONFIRMER", hintSetup: 'Choisis d\'abord quels atouts seront sur la roue',
         setupCount: (n,m)=>`${n} sur ${m} sélectionnés (minimum 3)`,
         copyLink: "LIEN DU BUILD", linkCopied: "Lien du build copié", linkManual: 'Copie le lien depuis la barre d\'adresse',
@@ -72,6 +80,8 @@ const I18N = {
         exportErr: 'Le navigateur bloque l\'export si la page est ouverte comme un fichier (file://). Ouvre le site via un serveur local ou un hébergeur, ou fais une capture d\'écran de la carte.'
     },
     kk: {
+        feedTitle: "ОЙЫНШЫЛАРҒА ТҮСТІ", feedEmpty: "Әзірге тыныш. Дөңгелекті айналдырыңыз!",
+        agoSec: (n)=>`${n} сек бұрын`, agoMin: (n)=>`${n} мин бұрын`, agoHour: (n)=>`${n} сағ бұрын`, agoDay: (n)=>`${n} күн бұрын`,
         setupWheel: "ДӨҢГЕЛЕКТІ БАПТАУ", setupTitle: "ДӨҢГЕЛЕКТІ БАПТАУ", setupHint: "Дөңгелектен алып тастау үшін перкті басыңыз. Сұр перктер түспейді.", setupAll: "БАРЛЫҒЫН ҚОСУ", setupNone: "БАРЛЫҒЫН ӨШІРУ", setupConfirm: "РАСТАУ", hintSetup: "Алдымен дөңгелекте қандай перктер болатынын таңдаңыз",
         setupCount: (n,m)=>`${m} ішінен ${n} таңдалды (кемінде 3)`,
         copyLink: "БИЛД СІЛТЕМЕСІ", linkCopied: "Билд сілтемесі көшірілді", linkManual: "Сілтемені мекенжай жолынан көшіріңіз",
