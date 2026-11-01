@@ -947,6 +947,8 @@ function updateControlsUI() {
     document.getElementById('gearBtn').disabled = isSpinning || killerRolling;
     hint.dataset.i18n = wheelConfigured ? 'hint' : 'hintSetup';
     hint.textContent = t(hint.dataset.i18n);
+    // кнопка «Карточка» нужна только когда карточка уже готова (маньяк выбран)
+    cardBtn.style.display = currentKiller ? '' : 'none';
     cardBtn.disabled = !currentKiller;
     if (!wheelConfigured) {
         spinBtn.innerText = t('setupWheel');

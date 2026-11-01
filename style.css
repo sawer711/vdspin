@@ -980,10 +980,11 @@ canvas {
     .social-btn::after { display: none; }
 }
 
-/* --- СОЦСЕТИ (снизу слева) --- */
+/* --- СОЦСЕТИ (снизу по центру) --- */
 .socials {
     position: fixed;
-    left: 18px;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 18px;
     z-index: 50;
     display: flex;
@@ -1120,7 +1121,7 @@ a:focus-visible {
 }
 
 @media (max-width: 860px) {
-    .socials { position: static; margin-top: 36px; gap: 12px; }
+    .socials { position: static; transform: none; margin-top: 36px; gap: 12px; justify-content: center; }
     .social-btn { width: 46px; height: 46px; }
 }
 
