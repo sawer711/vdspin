@@ -1,6 +1,6 @@
 // ДАННЫЕ: перки и маньяки. Чтобы добавить нового — скопируй блок и поменяй поля.
 
-// ВСЕ 24 ПЕРКА С ОПИСАНИЕМ И ЦИТАТАМИ
+// ВСЕ 27 ПЕРКОВ С ОПИСАНИЕМ И ЦИТАТАМИ
 const MASTER_PERKS = [
     {
         id: 1,
@@ -169,6 +169,27 @@ const MASTER_PERKS = [
         image: "перки/trade_off.png",
         desc: "Создаёт <span class='hl-red'>2 Проклятые Цепи</span>. Заковывание <span class='hl-surv'>Выжившего</span> на обычную (не проклятую) цепь превращает её в Проклятую Цепь. Заковывание <span class='hl-surv'>Выжившего</span> на Проклятую Цепь <span class='hl-aura'>раскрывает ауру</span> Генератора с наибольшим прогрессом починки на <span class='t1'>10</span>/<span class='t2'>15</span>/<span class='t3'>20</span> секунд. Выжившие, чинящие этот Генератор, делают это на <span class='hl-red'>15% медленнее</span> во время действия раскрытия.",
         quote: '«Каждый раз, когда мы кого-то спасаем... становится только хуже.»'
+    },
+    {
+        id: 25,
+        name: "Dread Harvest",
+        image: "перки/dread_harvest.png",
+        desc: "Пока <span class='hl-surv'>Выживший</span> прикован к цепи, Dread Harvest активируется. Вы получаете накапливающееся <span class='hl-surv'>ускорение</span> на <span class='t1'>1%</span>/<span class='t2'>2%</span>/<span class='t3'>3%</span> за каждого <span class='hl-surv'>Выжившего</span>, который чинит Генератор. Генераторы, которые не чинят, начинают регрессировать со скоростью <span class='t1'>100</span>/<span class='t2'>150</span>/<span class='t3'>200</span>%, пока <span class='hl-surv'>Выживший</span> не будет спасён. Эффект не действует в радиусе AntiCamp.",
+        quote: '«Вам следовало следить за ним, каждую минуту.»'
+    },
+    {
+        id: 26,
+        name: "Surge of Power",
+        image: "перки/surge_of_power.png",
+        desc: "Когда вы находитесь в пределах <span class='t1'>50</span>/<span class='t2'>60</span>/<span class='t3'>70</span> стадов от завершённого Генератора, вы получаете <span class='hl-surv'>ускорение</span> на <span class='hl-surv'>6%</span>. Если вы в радиусе регрессирующего Генератора, вы получаете половину этой скорости. Приоритет у более сильного бонуса, а оба бонуса сохраняются <span class='t1'>3 секунды</span> после выхода из радиуса. Не суммируется.",
+        quote: '«Осторожнее с желаниями»'
+    },
+    {
+        id: 27,
+        name: "Silent Shadow",
+        image: "перки/silent_shadow.png",
+        desc: "Если вы выходите из <span class='hl-surv'>погони</span>, не повалив <span class='hl-surv'>Выжившего</span>, Silent Shadow подготавливается. В следующий раз, когда вы выйдете из погони таким образом, вы получите статус-эффект <span class='hl-surv'>Незаметность</span> на <span class='t1'>20</span>/<span class='t2'>30</span>/<span class='t3'>40</span> секунд. После этого перк уходит на перезарядку <span class='hl-red'>45 секунд</span>.",
+        quote: '«...Уходим во тьму»'
     }
 ];
 

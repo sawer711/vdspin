@@ -1,5 +1,5 @@
 // ПЕРЕВОДЫ ПЕРКОВ: описания и цитаты на английском, испанском, французском и казахском.
-// Русские тексты лежат в perks.js. Порядок перков такой же, как в perks.js (1–24).
+// Русские тексты лежат в perks.js. Порядок перков такой же, как в perks.js (1–27).
 // Названия перков не переводятся — как в игре.
 //
 // Чтобы поправить перевод, найди нужный перк по комментарию и измени текст.
@@ -93,7 +93,16 @@ const PERK_I18N = (() => {
              `«They say the Angel of Death doesn't knock on the door — he simply waits for you to walk through it.»`],
             // 24 Trade Off
             [`Creates ${r('2 Cursed Chains')}. Chaining a ${s('Survivor')} to a regular (non-cursed) chain turns it into a Cursed Chain. Chaining a ${s('Survivor')} to a Cursed Chain ${a('reveals the aura')} of the Generator with the most repair progress for ${tier(10, 15, 20)} seconds. Survivors repairing this Generator do so ${r('15% slower')} while the reveal is active.`,
-             `«Every time we save someone... it only gets worse.»`]
+             `«Every time we save someone... it only gets worse.»`],
+            // 25 Dread Harvest
+            [`While a ${s('Survivor')} is actively trapped in a ${s('Chain')}, Dread Harvest activates. You gain a stackable ${tierp(1, 2, 3)} ${s('Speed Boost')} for each ${s('Survivor')} actively repairing a Generator. Generators not being repaired start regressing at ${tierp(100, 150, 200)} speed until the ${s('Survivor')} is saved. Cannot grant its effect within AntiCamp range.`,
+             `«You should have been watching him, every minute.»`],
+            // 26 Surge of Power
+            [`Whenever you are within ${tier(50, 60, 70)} studs of a completed Generator, gain a ${s('6% Speed Boost')}. If you are within range of a regressing Generator, gain half this speed. The stronger boost takes priority, and both boosts linger for ${o1('3 seconds')} after leaving the radius. Does not stack.`,
+             `«Careful what you wish for»`],
+            // 27 Silent Shadow
+            [`Leaving a ${s('chase')} without downing the ${s('Survivor')} readies Silent Shadow. The next time you leave a chase this way, gain the ${s('Undetectable')} Status Effect for ${tier(20, 30, 40)} seconds. This perk then goes on a ${r('45 second')} cooldown.`,
+             `«...Going Dark»`]
         ],
 
         // ======================= ESPAÑOL =======================
@@ -169,7 +178,16 @@ const PERK_I18N = (() => {
              `«Dicen que el Ángel de la Muerte no llama a la puerta: simplemente espera a que la cruces.»`],
             // 24 Trade Off
             [`Crea ${r('2 Cadenas Malditas')}. Encadenar a un ${s('Superviviente')} a una cadena normal (no maldita) la convierte en una Cadena Maldita. Encadenar a un ${s('Superviviente')} a una Cadena Maldita ${a('revela el aura')} del Generador con más progreso de reparación durante ${tier(10, 15, 20)} segundos. Los Supervivientes que reparan ese Generador lo hacen un ${r('15% más lento')} mientras dure la revelación.`,
-             `«Cada vez que salvamos a alguien... solo empeora.»`]
+             `«Cada vez que salvamos a alguien... solo empeora.»`],
+            // 25 Dread Harvest
+            [`Mientras un ${s('Superviviente')} esté encadenado a una ${s('Cadena')}, Dread Harvest se activa. Obtienes un ${s('aumento de velocidad')} acumulable de ${tierp(1, 2, 3)} por cada ${s('Superviviente')} que esté reparando un Generador. Los Generadores que no se están reparando empiezan a retroceder a ${tierp(100, 150, 200)} de velocidad hasta que el ${s('Superviviente')} sea salvado. No concede su efecto dentro del radio de AntiCamp.`,
+             `«Deberías haberlo vigilado, cada minuto.»`],
+            // 26 Surge of Power
+            [`Cuando estás a menos de ${tier(50, 60, 70)} studs de un Generador completado, obtienes un ${s('aumento de velocidad del 6%')}. Si estás dentro del radio de un Generador que retrocede, obtienes la mitad de esa velocidad. Prevalece el aumento más fuerte, y ambos se mantienen ${o1('3 segundos')} después de salir del radio. No se acumula.`,
+             `«Ten cuidado con lo que deseas»`],
+            // 27 Silent Shadow
+            [`Salir de una ${s('persecución')} sin derribar al ${s('Superviviente')} prepara Silent Shadow. La próxima vez que salgas de una persecución de este modo, obtienes el efecto de estado ${s('Indetectable')} durante ${tier(20, 30, 40)} segundos. Después, este beneficio entra en enfriamiento de ${r('45 segundos')}.`,
+             `«...Entrando en la oscuridad»`]
         ],
 
         // ======================= FRANÇAIS =======================
@@ -245,7 +263,16 @@ const PERK_I18N = (() => {
              `«On dit que l'Ange de la Mort ne frappe pas à la porte — il attend simplement que vous la franchissiez.»`],
             // 24 Trade Off
             [`Crée ${r('2 Chaînes Maudites')}. Enchaîner un ${s('Survivant')} à une chaîne ordinaire (non maudite) la transforme en Chaîne Maudite. Enchaîner un ${s('Survivant')} à une Chaîne Maudite ${a('révèle l\'aura')} du Générateur ayant le plus de progression de réparation pendant ${tier(10, 15, 20)} secondes. Les Survivants qui réparent ce Générateur le font ${r('15 % plus lentement')} pendant la durée de la révélation.`,
-             `«Chaque fois qu'on sauve quelqu'un... ça empire.»`]
+             `«Chaque fois qu'on sauve quelqu'un... ça empire.»`],
+            // 25 Dread Harvest
+            [`Tant qu'un ${s('Survivant')} est enchaîné à une ${s('Chaîne')}, Dread Harvest est actif. Vous gagnez un ${s('bonus de vitesse')} cumulable de ${tierp(1, 2, 3)} pour chaque ${s('Survivant')} qui répare un Générateur. Les Générateurs qui ne sont pas réparés commencent à régresser à ${tierp(100, 150, 200)} de vitesse jusqu'à ce que le ${s('Survivant')} soit sauvé. N'accorde pas son effet dans le rayon d'AntiCamp.`,
+             `«Vous auriez dû le surveiller, chaque minute.»`],
+            // 26 Surge of Power
+            [`Lorsque vous êtes à moins de ${tier(50, 60, 70)} studs d'un Générateur terminé, vous gagnez un ${s('bonus de vitesse de 6 %')}. Si vous êtes dans le rayon d'un Générateur en régression, vous gagnez la moitié de cette vitesse. Le bonus le plus fort est prioritaire, et les deux bonus persistent ${o1('3 secondes')} après avoir quitté le rayon. Ne se cumule pas.`,
+             `«Prends garde à ce que tu souhaites»`],
+            // 27 Silent Shadow
+            [`Quitter une ${s('poursuite')} sans avoir mis à terre le ${s('Survivant')} prépare Silent Shadow. La prochaine fois que vous quittez une poursuite de cette façon, vous obtenez l'effet ${s('Indétectable')} pendant ${tier(20, 30, 40)} secondes. Cet atout passe ensuite en recharge pendant ${r('45 secondes')}.`,
+             `«...Dans l'ombre»`]
         ],
 
         // ======================= ҚАЗАҚША =======================
@@ -321,7 +348,16 @@ const PERK_I18N = (() => {
              `«Өлім Періштесі есікті қақпайды дейді — ол сенің есіктен өтуіңді жай ғана күтеді.»`],
             // 24 Trade Off
             [`${r('2 Қарғыс шынжырын')} жасайды. ${s('Аман қалушыны')} қарапайым (қарғыс емес) шынжырға байлау оны Қарғыс шынжырына айналдырады. ${s('Аман қалушыны')} Қарғыс шынжырына байлау жөндеу барысы ең жоғары Генератордың ${a('аурасын')} ${tier(10, 15, 20)} секундқа ${a('ашады')}. Осы Генераторды жөндеп жатқан Аман қалушылар ашылу әрекет еткен кезде ${r('15% баяу')} жөндейді.`,
-             `«Біз біреуді құтқарған сайын... жағдай тек нашарлай түседі.»`]
+             `«Біз біреуді құтқарған сайын... жағдай тек нашарлай түседі.»`],
+            // 25 Dread Harvest
+            [`${s('Аман қалушы')} ${s('Шынжырға')} байланып тұрғанда, Dread Harvest іске қосылады. Генераторды жөндеп жатқан әрбір ${s('Аман қалушы')} үшін сіз жинақталатын ${tierp(1, 2, 3)} ${s('жылдамдық бонусын')} аласыз. Жөнделмей тұрған Генераторлар ${s('Аман қалушы')} құтқарылғанға дейін ${tierp(100, 150, 200)} жылдамдықпен кері кете бастайды. AntiCamp радиусында әсер етпейді.`,
+             `«Сіз оны әр минут бақылауыңыз керек еді.»`],
+            // 26 Surge of Power
+            [`Аяқталған Генератордан ${tier(50, 60, 70)} стад радиуста болғанда, сіз ${s('6% жылдамдық бонусын')} аласыз. Егер сіз кері кетіп бара жатқан Генератордың радиусында болсаңыз, осы жылдамдықтың жартысын аласыз. Күштірек бонус басым, ал екі бонус та радиустан шыққаннан кейін ${o1('3 секунд')} сақталады. Жинақталмайды.`,
+             `«Тілегіңе абай бол»`],
+            // 27 Silent Shadow
+            [`${s('Аман қалушыны')} құлатпай ${s('қуғыннан')} шықсаңыз, Silent Shadow дайындалады. Келесі жолы қуғыннан осылай шыққанда, сіз ${tier(20, 30, 40)} секундқа ${s('Көрінбеушілік')} күй әсерін аласыз. Содан кейін бұл перк ${r('45 секундқа')} қайта зарядталады.`,
+             `«...Қараңғыға кету»`]
         ]
     };
 })();
