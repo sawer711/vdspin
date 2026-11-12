@@ -200,7 +200,10 @@ const KILLERS = [
     { name: "Hidden",   image: "маньяки/bandage.webp" },
     { name: "Knight",   image: "маньяки/knight.webp" },
     { name: "Jason",    image: "маньяки/jason.webp" },
-    { name: "Jacket",   image: "маньяки/richard.webp" }
+    { name: "Jacket",   image: "маньяки/richard.webp" },
+    { name: "Buther",   image: "маньяки/buther.webp" },
+    { name: "Cure",     image: "маньяки/cure.webp" },
+    { name: "Veil",     image: "маньяки/veil.webp" }
 ];
 
 // Автор сайта (тег слева от колеса).
