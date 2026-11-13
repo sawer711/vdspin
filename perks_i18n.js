@@ -1,5 +1,5 @@
 // ПЕРЕВОДЫ ПЕРКОВ: описания и цитаты на английском, испанском, французском и казахском.
-// Русские тексты лежат в perks.js. Порядок перков такой же, как в perks.js (1–27).
+// Русские тексты лежат в perks.js. Порядок перков такой же, как в perks.js (1–30).
 // Названия перков не переводятся — как в игре.
 //
 // Чтобы поправить перевод, найди нужный перк по комментарию и измени текст.
@@ -102,7 +102,16 @@ const PERK_I18N = (() => {
              `«Careful what you wish for»`],
             // 27 Silent Shadow
             [`Leaving a ${s('chase')} without downing the ${s('Survivor')} readies Silent Shadow. The next time you leave a chase this way, gain the ${s('Undetectable')} Status Effect for ${tier(20, 30, 40)} seconds. This perk then goes on a ${r('45 second')} cooldown.`,
-             `«...Going Dark»`]
+             `«...Going Dark»`],
+            // 28 Visceral Drive
+            [`After chaining a ${s('Survivor')}, Visceral Drive activates for ${o1('45 seconds')}. While active, your next Generator kick instantly regresses it by ${tierp(10, 13, 16)} and ${a('reveals the auras')} of injured ${s('Survivors')} within ${o1('120 studs')} for ${o1('5 seconds')}. While using Visceral Drive, the damage of a kick cannot exceed ${tierp(10, 13, 16)}.`,
+             `«Bloody good engineering»`],
+            // 29 Diminishing Returns
+            [`Whenever a ${s('Survivor')} takes damage for any reason, gain a token, up to ${r(2)}. Chaining a ${s('Survivor')} spends all tokens, reducing everyone's repair speed by ${r('3%')} per token for ${tier(60, 70, 80)} seconds, and raises your token cap by ${r(1)}.`,
+             `«Watch the hope drain from their eyes»`],
+            // 30 Cold Blooded
+            [`Whenever you personally down a ${s('Survivor')} by any means, all ${s('Healthy')} Survivors within ${o1('60 studs')} are afflicted with ${tierp(9, 12, 15)} ${r('Slowness')} for ${o1('10 seconds')} and their ${a('aura is revealed')} to you for ${o1('4 seconds')}. A sound cue plays from the nearest affected Survivor. Cannot trigger within AntiCamp range. Has a ${r('60 second')} cooldown when it finds a Survivor to afflict.`,
+             `«She can't hide, no place to hide.»`]
         ],
 
         // ======================= ESPAÑOL =======================
@@ -187,7 +196,16 @@ const PERK_I18N = (() => {
              `«Ten cuidado con lo que deseas»`],
             // 27 Silent Shadow
             [`Salir de una ${s('persecución')} sin derribar al ${s('Superviviente')} prepara Silent Shadow. La próxima vez que salgas de una persecución de este modo, obtienes el efecto de estado ${s('Indetectable')} durante ${tier(20, 30, 40)} segundos. Después, este beneficio entra en enfriamiento de ${r('45 segundos')}.`,
-             `«...Entrando en la oscuridad»`]
+             `«...Entrando en la oscuridad»`],
+            // 28 Visceral Drive
+            [`Después de encadenar a un ${s('Superviviente')}, Visceral Drive se activa durante ${o1('45 segundos')}. Mientras está activo, tu siguiente patada a un Generador lo hace retroceder al instante un ${tierp(10, 13, 16)} y ${a('revela las auras')} de los ${s('Supervivientes')} heridos en un radio de ${o1('120 studs')} durante ${o1('5 segundos')}. Mientras usas Visceral Drive, el daño de una patada no puede superar el ${tierp(10, 13, 16)}.`,
+             `«Una ingeniería de lo más sangrienta»`],
+            // 29 Diminishing Returns
+            [`Cada vez que un ${s('Superviviente')} recibe daño por cualquier motivo, obtienes una ficha, hasta un máximo de ${r(2)}. Encadenar a un ${s('Superviviente')} gasta todas las fichas y reduce la velocidad de reparación de todos un ${r('3%')} por ficha durante ${tier(60, 70, 80)} segundos, además de aumentar tu máximo de fichas en ${r(1)}.`,
+             `«Mira cómo la esperanza se escurre de sus ojos»`],
+            // 30 Cold Blooded
+            [`Cada vez que derribas personalmente a un ${s('Superviviente')} por cualquier medio, todos los Supervivientes ${s('sanos')} en un radio de ${o1('60 studs')} sufren una ${r('Ralentización')} del ${tierp(9, 12, 15)} durante ${o1('10 segundos')} y su ${a('aura se te revela')} durante ${o1('4 segundos')}. Suena una señal sonora desde el Superviviente afectado más cercano. No se activa dentro del radio de AntiCamp. Tiene un enfriamiento de ${r('60 segundos')} cuando encuentra a un Superviviente al que afectar.`,
+             `«No puede esconderse, no hay dónde esconderse.»`]
         ],
 
         // ======================= FRANÇAIS =======================
@@ -272,7 +290,16 @@ const PERK_I18N = (() => {
              `«Prends garde à ce que tu souhaites»`],
             // 27 Silent Shadow
             [`Quitter une ${s('poursuite')} sans avoir mis à terre le ${s('Survivant')} prépare Silent Shadow. La prochaine fois que vous quittez une poursuite de cette façon, vous obtenez l'effet ${s('Indétectable')} pendant ${tier(20, 30, 40)} secondes. Cet atout passe ensuite en recharge pendant ${r('45 secondes')}.`,
-             `«...Dans l'ombre»`]
+             `«...Dans l'ombre»`],
+            // 28 Visceral Drive
+            [`Après avoir enchaîné un ${s('Survivant')}, Visceral Drive s'active pendant ${o1('45 secondes')}. Tant qu'il est actif, votre prochain coup de pied sur un Générateur le fait régresser instantanément de ${tierp(10, 13, 16)} et ${a('révèle les auras')} des ${s('Survivants')} blessés dans un rayon de ${o1('120 studs')} pendant ${o1('5 secondes')}. Pendant l'utilisation de Visceral Drive, les dégâts d'un coup de pied ne peuvent pas dépasser ${tierp(10, 13, 16)}.`,
+             `«De l'ingénierie sacrément sanglante»`],
+            // 29 Diminishing Returns
+            [`Chaque fois qu'un ${s('Survivant')} subit des dégâts, quelle qu'en soit la raison, vous gagnez un jeton, jusqu'à ${r(2)}. Enchaîner un ${s('Survivant')} dépense tous les jetons, réduisant la vitesse de réparation de tout le monde de ${r('3 %')} par jeton pendant ${tier(60, 70, 80)} secondes, et augmente votre maximum de jetons de ${r(1)}.`,
+             `«Regarde l'espoir quitter leurs yeux»`],
+            // 30 Cold Blooded
+            [`Chaque fois que vous mettez personnellement à terre un ${s('Survivant')}, de quelque manière que ce soit, tous les Survivants ${s('en bonne santé')} dans un rayon de ${o1('60 studs')} subissent un ${r('Ralentissement')} de ${tierp(9, 12, 15)} pendant ${o1('10 secondes')} et leur ${a('aura vous est révélée')} pendant ${o1('4 secondes')}. Un signal sonore retentit depuis le Survivant affecté le plus proche. Ne se déclenche pas dans le rayon d'AntiCamp. Temps de recharge de ${r('60 secondes')} lorsqu'il trouve un Survivant à affecter.`,
+             `«Elle ne peut pas se cacher, nulle part où se cacher.»`]
         ],
 
         // ======================= ҚАЗАҚША =======================
@@ -357,7 +384,16 @@ const PERK_I18N = (() => {
              `«Тілегіңе абай бол»`],
             // 27 Silent Shadow
             [`${s('Аман қалушыны')} құлатпай ${s('қуғыннан')} шықсаңыз, Silent Shadow дайындалады. Келесі жолы қуғыннан осылай шыққанда, сіз ${tier(20, 30, 40)} секундқа ${s('Көрінбеушілік')} күй әсерін аласыз. Содан кейін бұл перк ${r('45 секундқа')} қайта зарядталады.`,
-             `«...Қараңғыға кету»`]
+             `«...Қараңғыға кету»`],
+            // 28 Visceral Drive
+            [`${s('Аман қалушыны')} шынжырға байлағаннан кейін Visceral Drive ${o1('45 секундқа')} іске қосылады. Ол белсенді кезде Генераторға келесі тебу оны бірден ${tierp(10, 13, 16)} кері тартады және ${o1('120 стад')} радиустағы жараланған ${s('Аман қалушылардың')} ${a('аураларын')} ${o1('5 секундқа')} ${a('ашады')}. Visceral Drive қолданылып тұрғанда тебудің зақымы ${tierp(10, 13, 16)} мәнінен аспайды.`,
+             `«Қанды жақсы инженерия»`],
+            // 29 Diminishing Returns
+            [`${s('Аман қалушы')} кез келген себеппен зақым алған сайын сіз жетон аласыз (ең көбі ${r(2)}). ${s('Аман қалушыны')} шынжырға байлау барлық жетондарды жұмсайды: әр жетон үшін барлығының жөндеу жылдамдығы ${tier(60, 70, 80)} секундқа ${r('3%')} төмендейді, ал жетон шегіңіз ${r(1)} артады.`,
+             `«Олардың көзінен үміттің сөнгенін қара»`],
+            // 30 Cold Blooded
+            [`Сіз өзіңіз кез келген жолмен ${s('Аман қалушыны')} құлатқан сайын, ${o1('60 стад')} радиустағы барлық ${s('дені сау')} Аман қалушылар ${o1('10 секундқа')} ${tierp(9, 12, 15)} ${r('Баяулау')} әсеріне ұшырайды және олардың ${a('аурасы')} сізге ${o1('4 секундқа')} ${a('ашылады')}. Ең жақын әсер алған Аман қалушыдан дыбыстық сигнал шығады. AntiCamp радиусында іске қосылмайды. Әсер етер Аман қалушыны тапқанда ${r('60 секундқа')} қайта зарядталады.`,
+             `«Ол жасырына алмайды, жасырынатын жер жоқ.»`]
         ]
     };
 })();

@@ -1,6 +1,6 @@
 // ДАННЫЕ: перки и маньяки. Чтобы добавить нового — скопируй блок и поменяй поля.
 
-// ВСЕ 27 ПЕРКОВ С ОПИСАНИЕМ И ЦИТАТАМИ
+// ВСЕ 30 ПЕРКОВ С ОПИСАНИЕМ И ЦИТАТАМИ
 const MASTER_PERKS = [
     {
         id: 1,
@@ -190,6 +190,27 @@ const MASTER_PERKS = [
         image: "перки/silent_shadow.png",
         desc: "Если вы выходите из <span class='hl-surv'>погони</span>, не повалив <span class='hl-surv'>Выжившего</span>, Silent Shadow подготавливается. В следующий раз, когда вы выйдете из погони таким образом, вы получите статус-эффект <span class='hl-surv'>Незаметность</span> на <span class='t1'>20</span>/<span class='t2'>30</span>/<span class='t3'>40</span> секунд. После этого перк уходит на перезарядку <span class='hl-red'>45 секунд</span>.",
         quote: '«...Уходим во тьму»'
+    },
+    {
+        id: 28,
+        name: "Visceral Drive",
+        image: "перки/visceral_drive.png",
+        desc: "После того как вы приковали <span class='hl-surv'>Выжившего</span> к цепи, Visceral Drive активируется на <span class='t1'>45 секунд</span>. Пока он активен, ваш следующий удар по Генератору мгновенно откатывает его на <span class='t1'>10%</span>/<span class='t2'>13%</span>/<span class='t3'>16%</span> и раскрывает <span class='hl-aura'>ауры</span> раненых <span class='hl-surv'>Выживших</span> в радиусе <span class='t1'>120 стадов</span> на <span class='t1'>5 секунд</span>. Пока действует Visceral Drive, урон от удара не может превышать <span class='t1'>10%</span>/<span class='t2'>13%</span>/<span class='t3'>16%</span>.",
+        quote: '«Чертовски хорошая инженерия»'
+    },
+    {
+        id: 29,
+        name: "Diminishing Returns",
+        image: "перки/diminishing_returns.png",
+        desc: "Каждый раз, когда <span class='hl-surv'>Выжившему</span> наносится урон по любой причине, вы получаете жетон (максимум <span class='hl-red'>2</span>). Приковывание <span class='hl-surv'>Выжившего</span> тратит все жетоны, снижая скорость ремонта у всех на <span class='hl-red'>3%</span> за каждый жетон на <span class='t1'>60</span>/<span class='t2'>70</span>/<span class='t3'>80</span> секунд, и повышает ваш максимум жетонов на <span class='hl-red'>1</span>.",
+        quote: '«Смотри, как надежда уходит из их глаз»'
+    },
+    {
+        id: 30,
+        name: "Cold Blooded",
+        image: "перки/cold_blooded.png",
+        desc: "Каждый раз, когда вы лично повалили <span class='hl-surv'>выжившего</span> любым способом, все <span class='hl-surv'>здоровые</span> выжившие в радиусе <span class='t1'>60 стадов</span> получают <span class='hl-red'>замедление</span> на <span class='t1'>9%</span>/<span class='t2'>12%</span>/<span class='t3'>15%</span> на <span class='t1'>10 секунд</span>, а их <span class='hl-aura'>ауры раскрываются</span> вам на <span class='t1'>4 секунды</span>. От ближайшего затронутого выжившего звучит звуковой сигнал. Не срабатывает в радиусе AntiCamp. Если перк нашёл выжившего, он уходит на перезарядку <span class='hl-red'>60 секунд</span>.",
+        quote: '«Ей не спрятаться, негде прятаться.»'
     }
 ];
 
